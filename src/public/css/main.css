@@ -1,0 +1,78 @@
+@font-face {
+    font-family: 'Mermaid';
+    src: url('../fonts/mermaid1001-webfont.woff2') format('woff2'),
+         url('../fonts/mermaid1001-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Louis George Cafe';
+    src: url('../fonts/louis_george_cafe-webfont.woff2') format('woff2'),
+         url('../fonts/louis_george_cafe-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --title-color: #636363;
+    --text-color: #999999;
+    --text-hover-color: #D6D6D4;
+}
+
+.center {
+    text-align: center;
+}
+
+.title {
+    font-family: 'Mermaid';
+    font-size: 4em;
+    color: var(--title-color);
+}
+
+.content {
+    margin-top: 1em;
+    font-family: 'Louis George Cafe';
+    font-size: 1em;
+    color: var(--text-color);
+}
+
+#label {
+    font-size: 1.5em;
+}
+
+#metadata {
+    color: var(--title-color);
+    font-size: 1.3em;
+}
+
+#playPause {
+    width: 4em;
+    filter: invert(55%) sepia(73%) saturate(524%) hue-rotate(347deg) brightness(91%) contrast(86%);
+}
+
+#description {
+    margin-top: 2em;
+    font-size: 1.2em;
+}
+
+#archive {
+    margin-top: 4em;
+    font-size: 1em;
+}
+
+#description a, #archive a {
+	color: var(--title-color);
+    text-decoration: none;
+}
+
+#description a:hover, #archive a:hover {
+	color: var(--text-hover-color);
+	cursor: pointer;
+    text-decoration: none;
+}
+
+#description a:focus, #archive a:focus {
+	outline-color: var(--title-color);
+    text-decoration: none;
+}

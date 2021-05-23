@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Archival Commentary</title>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+	<link rel='stylesheet' href="{{ url_for('static', filename='css/main.css') }}" />
+</head>
+
+<body>
+	<script src="https://unpkg.com/wavesurfer.js"></script>
+
+	<!-- Prefetch images -->
+	<img src="{{ url_for('static', filename='images/play.png') }}" style="display: none;" />
+	<img src="{{ url_for('static', filename='images/pause.png') }}" style="display: none;" />
+
+	<div class="title center">Archival Commentary</div>
+	<div class="content center">
+		<div id="label"></div>
+
+		<p id="metadata" class="playback" style="visibility: hidden;">"{{ entry.trend_name }}" ({{ entry.num_tweets }}) in {{ entry.trend_location }} on <span id="timestamp"></span></p>
+		<div id="waveform"></div>
+		<div class="playback" style="visibility: hidden;">
+			<p>Toggle Playback</p>
+			<input id="playPause" type="image" src="{{ url_for('static', filename='images/play.png') }}"/>	
+		</div>
+	
+		<p id="description">
+			This project presents a collage of audio fragments from the <a href="https://archive.org/" target="_blank">Internet Archive</a>
+			related to a topic currently trending on Twitter.
+			<br/>
+			<br/>
+			Listen to what the Internet has to say about "{{ entry.trend_name }}", which has been present in {{ entry.num_tweets}} tweets, and
+			is trending in {{ entry.trend_location }}.
+			<br/>
+			<br/>
+			This page is updated as trending topics change over time.
+			<br/>
+			<br/>
+			- <a href="https://rytrose.com" target="_blank">Ryan Rose</a>
+		</p>
+		<p id="archive">
+			The archive of Archival Commentary:
+			<br/>
+			<br/>
+			{% for e in all_entries %}
+				<a href="{{ url_for('archival') }}?trend={{ e.trend_name|quote_plus }}">{{ e.trend_name }}</a>
+				{% if not loop.last %}
+					,
+				{% endif %}	
+			{% endfor %}
+		</p>
+	</div>
+
+	<script>
+		function run() {
+			let entryFilename = "{{ entry.filename }}";
+			if (!entryFilename) {
+				let label = document.getElementById("label");
+				label.innerHTML = "No entries found in the archive. Please come back later.";
+				return;
+			};
+			console.log(`Loading ${entryFilename}...`);
+			
+			let ts = new Date({{ entry.timestamp }} * 1000);
+			let timestamp = document.getElementById("timestamp");
+			timestamp.innerHTML = ts.toLocaleDateString("en-US", {
+				day: "numeric",
+				weekday: "long",
+				year: "numeric",
+				month: "long",
+				hour: "numeric",
+				minute: "numeric"
+			});
+
+			let wavesurfer = WaveSurfer.create({
+				container: '#waveform',
+				cursorColor: '#999999',
+				progressColor: '#e8b380',
+				waveColor: '#f4dbc2',
+				responsive: true,
+				barWidth: 3,
+				barRadius: 3,
+				cursorWidth: 2,
+				barGap: 2
+			});
+			wavesurfer.load(`https://archival-project.s3.amazonaws.com/${entryFilename}`);
+			wavesurfer.on("finish", () => {
+				// Loop the track
+				wavesurfer.play(0);
+			});
+
+			wavesurfer.on("ready", () => {
+				// Unhide UI elements
+				let playbackElements = document.querySelectorAll(".playback");
+				for (let e of playbackElements) e.style.visibility = "visible";
+				let playPause = document.getElementById("playPause");
+				playPause.onclick = (e) => {
+					// Toggle playback
+					wavesurfer.playPause();
+
+					// Update image
+					if (playPause.src.includes("play.png")) playPause.src = "{{ url_for('static', filename='images/pause.png') }}";
+					else playPause.src = "{{ url_for('static', filename='images/play.png') }}";
+				};
+			});
+		}
+
+		run();
+	</script>
+</body>
+
+</html>
