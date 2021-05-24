@@ -11,7 +11,7 @@ from pydub.playback import play
 from constants import FLASK_NAME
 from twitter import get_trends_by_location_name
 from internet_archive import get_mp3_data_for_search_results
-from audio import convert_to_pcm
+from audio import convert_to_pcm, convert_to_pcm_ffmpeg
 from vad import extract_voiced_sections, write_wave
 from util import quantize_without_going_over
 
@@ -32,8 +32,7 @@ def generate_audio_for_search_results(name, results, max_section_length=10.0, ma
 
     for title, data in mp3_data:
         # Write to file to create AudioSegment
-        filename = f"{str(uuid4())}-{title}.mp3"
-        filename = "".join(c for c in filename if c.isalnum() or c in (' ','.','_')).rstrip()
+        filename = f"{str(uuid4())}.mp3"
         try:
             with open(filename, "wb") as f:
                 f.write(data)
@@ -43,12 +42,13 @@ def generate_audio_for_search_results(name, results, max_section_length=10.0, ma
         # Convert MP3 data to PCM
         logger.debug(f"Converting \"{title}\"...")
         try:
-            pcm_data = convert_to_pcm(data)
+            pcm_data = convert_to_pcm_ffmpeg(filename)
         except Exception as e:
             logger.debug(f"Unable to convert MP3 to PCM: {e}")
             continue
 
         # Create audio segment from MP3
+        logger.debug(f"Creating audio segment from \"{filename}\"...")
         try:
             source_segment = AudioSegment.from_mp3(filename)
         except Exception as e:
@@ -56,6 +56,7 @@ def generate_audio_for_search_results(name, results, max_section_length=10.0, ma
             continue
 
         # Delete downloaded MP3 file
+        logger.debug(f"Removing downloaded \"{filename}\"...")
         if os.path.exists(filename):
             os.remove(filename)
 

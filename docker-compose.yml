@@ -2,6 +2,7 @@ version: "3.4"
 
 services:
   archival:
+    image: registry.heroku.com/archival-project/web
     build:
       context: .
       dockerfile: src/Dockerfile
