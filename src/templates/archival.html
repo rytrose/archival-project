@@ -22,7 +22,11 @@
 		<p id="metadata" class="playback" style="visibility: hidden;">"{{ entry.trend_name }}" ({{ entry.num_tweets }}) in {{ entry.trend_location }} on <span id="timestamp"></span></p>
 		<div id="waveform"></div>
 		<div class="playback" style="visibility: hidden;">
-			<p>Toggle Playback</p>
+			<p>
+				Toggle Playback
+				<br/>
+				<span style="font-size: 0.8em;">(headphones recommended)</span>
+			</p>
 			<input id="playPause" type="image" src="{{ url_for('static', filename='images/play.png') }}"/>	
 		</div>
 	
