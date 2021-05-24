@@ -57,7 +57,9 @@
 }
 
 #archive {
-    margin-top: 4em;
+    margin-top: 2em;
+    margin-left: 10%;
+    margin-right: 10%;
     font-size: 1em;
 }
 
@@ -66,13 +68,31 @@
     text-decoration: none;
 }
 
-#description a:hover, #archive a:hover {
+#description a:hover, #archive a:hover, .collapse-button:hover {
 	color: var(--text-hover-color);
 	cursor: pointer;
     text-decoration: none;
 }
 
-#description a:focus, #archive a:focus {
+#description a:focus, #archive a:focus, .collapse-button:focus {
 	outline-color: var(--title-color);
     text-decoration: none;
+}
+
+.collapse-button {
+    margin-top: 3em;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: var(--title-color);
+}
+
+.collapse-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+#detail-text {
+    margin-left: 10%;
+    margin-right: 10%;
 }

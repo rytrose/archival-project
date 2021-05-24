@@ -40,20 +40,45 @@
 			<br/>
 			- <a href="https://rytrose.com" target="_blank">Ryan Rose</a>
 		</p>
+		<p id="details">
+			<p class="collapse-button">What is going on?</p>
+			<div class="collapse-content">
+				<p id="detail-text">
+					To create an Archival Commentary entry, the Twitter API is used to look up the currently trending topics for a location. The topic with the most
+					associated tweets is selected for the entry. Then, the Internet Archive is searched for audio artifacts related to the trending topic. A selection of these artifacts
+					are downloaded and processed by a Voice Activity Detector (VAD) in order to determine the segments of the audio that are voiced. Voiced segments are sorted by length
+					and original source audio, then are collaged into an aleatoric composition, using interspersed silence and stereo panning to add contrast.
+					<br/>
+					<br/>
+					The result of this process is a new piece of audio that often bears many characteristics of the Internet: chaotic and unpredictable, but on occasion delightful, intriguing, and funny.
+				</p>
+			</div>
+		</p>
 		<p id="archive">
 			The archive of Archival Commentary:
 			<br/>
 			<br/>
 			{% for e in all_entries %}
-				<a href="{{ url_for('archival') }}?trend={{ e.trend_name|quote_plus }}">{{ e.trend_name }}</a>
-				{% if not loop.last %}
-					,
-				{% endif %}	
+				<a href="{{ url_for('archival') }}?trend={{ e.trend_name|quote_plus }}">{{ e.trend_name }}</a>{% if not loop.last %},{% endif %}
 			{% endfor %}
 		</p>
 	</div>
 
 	<script>
+		function setupCollapsibles() {
+			let collapseButtons = document.getElementsByClassName("collapse-button");
+			for (let i = 0; i < collapseButtons.length; i++) {
+				collapseButtons[i].addEventListener("click", function() {
+					var content = this.nextElementSibling;
+					if (content.style.maxHeight) {
+						content.style.maxHeight = null;
+					} else {
+						content.style.maxHeight = content.scrollHeight + "px";
+					}
+				});
+			}
+		}
+
 		function run() {
 			let entryFilename = "{{ entry.filename }}";
 			if (!entryFilename) {
@@ -107,6 +132,7 @@
 			});
 		}
 
+		setupCollapsibles();
 		run();
 	</script>
 </body>
